@@ -47,3 +47,10 @@ test('run injects exact values, suppresses all child output and propagates failu
   for(const mapping of ['TOKEN=services.missing','TOKEN=services','BAD-NAME=services.gitlab']){const r=run(mapping,'process.exit(99)');assert.equal(r.status,1);}
   await fs.writeFile(file,sample.replace('SENTINEL_SECRET','REPLACE_ME'));assert.equal(run('TOKEN=services.gitlab','process.exit(99)').status,1);
 });
+
+test('plugin starter prompts use the composer array schema',async()=>{
+  const manifest=JSON.parse(await fs.readFile(new URL('../plugins/ai-know-me/.codex-plugin/plugin.json',import.meta.url),'utf8'));
+  const prompts=manifest.interface.defaultPrompt;
+  assert.ok(Array.isArray(prompts));assert.ok(prompts.length>=1&&prompts.length<=3);
+  for(const prompt of prompts)assert.ok(typeof prompt==='string'&&prompt.trim().length>0&&prompt.length<=128);
+});

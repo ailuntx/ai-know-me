@@ -1,4 +1,4 @@
-# ai-know-me
+# AI Know Me
 
 中文 · [English](README.en.md)
 

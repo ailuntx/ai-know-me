@@ -1,6 +1,6 @@
 {
   "name": "ai-know-me",
-  "version": "0.3.0",
+  "version": "0.3.2",
   "description": "Pass local YAML credentials directly to processes without exposing child output",
   "type": "module",
   "bin": {
