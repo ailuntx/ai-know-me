@@ -1,7 +1,7 @@
 {
   "name": "ai-know-me",
-  "version": "0.2.2",
-  "description": "Query your local, human-maintained credential YAML",
+  "version": "0.3.0",
+  "description": "Pass local YAML credentials directly to processes without exposing child output",
   "type": "module",
   "bin": {
     "ai-know-me": "bin/cli.js"

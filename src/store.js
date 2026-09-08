@@ -74,11 +74,13 @@ export function get(data, query, reveal = false) {
   if (matches.length > 1) throw new Error('名称在多个分类中重复，请使用分类.名称');
   if (matches.length === 1) {
     const { group, name } = matches[0];
-    return reveal ? data.assets[group][name] : '••••••';
+    const value = data.assets[group][name];
+    if (reveal && (!value.trim() || value === 'REPLACE_ME')) throw new Error('凭据为空或占位值；请更新原 YAML 文件');
+    return reveal ? value : '••••••';
   }
   if (Object.hasOwn(data.assets, query)) {
     if (reveal) throw new Error('请指定单个名称，不能一次显示整个分类的密钥');
     return summaries(data).filter(entry => entry.group === query);
   }
-  throw new Error('没有找到名称');
+  throw new Error('未找到凭据；请检查名称或在原 YAML 文件中补充');
 }

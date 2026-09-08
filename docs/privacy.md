@@ -19,3 +19,7 @@ Support is provided through https://github.com/ailuntx/ai-know-me/issues. GitHub
 ai-know-me 在本地读取你指定的 YAML，并仅在本地配置中登记文件路径。发布者不提供托管密钥服务，不通过本程序收集分析数据或接收密钥；原文件为明文。列举和搜索会输出名称，`get --reveal` 会输出单项真实值。如果 AI 工具将输出送回会话，相关值可能由 AI 平台处理和保存；用于服务认证时也会发送给对应服务。npm、GitHub、AI 平台和目标服务各自适用其隐私政策。
 
 你自行管理和删除本地文件；删除文件不会撤销服务密钥或清除第三方保存的记录。支持入口为上述 GitHub Issues，请勿在公开问题中提交任何秘密或身份证明文件。
+
+`run` passes selected values through the child process environment and discards child stdout/stderr. Its result contains only execution status. This prevents values from entering conversation through this command’s output; it cannot control what the target program stores or sends. Manual `get --reveal` remains a plaintext output command.
+
+`run` 通过环境变量传递选中项，丢弃子进程输出，只返回执行状态；该命令的输出不包含凭据。目标程序仍可保存或发送凭据；手动 `get --reveal` 不享有此输出保护。

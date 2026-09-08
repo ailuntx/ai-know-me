@@ -2,7 +2,9 @@
 
 中文 · [English](README.en.md)
 
-从本地 YAML 按需读取凭据，供人和 AI 共用。
+安全调用本地凭据，直接传递给目标进程。
+
+`run` 通过环境变量注入所需项，不向会话返回凭据或子进程输出，只返回执行状态。
 
 | 分类 | 内容 |
 | --- | --- |
@@ -17,9 +19,7 @@ npm install --global ai-know-me --ignore-scripts
 ai-know-me init --file "/absolute/path/我的密钥.yaml"
 ai-know-me list services
 ai-know-me search git
-ai-know-me get services.gitlab --reveal
-ai-know-me get llm.modelscope --reveal
-ai-know-me get defaults.default_email --reveal
+ai-know-me run --env API_KEY=llm.modelscope -- node your-script.mjs
 ```
 
 文件格式：每项一行，名称小写，值用引号包裹。
@@ -45,9 +45,11 @@ assets:
 
 `doctor` 检查文件与权限，`--json` 提供 JSON 输出。默认网站密码不代表每个网站都使用它，不自动尝试密码变体。
 
-Codex 插件位于 `plugins/ai-know-me`：先确认 CLI 和文件配置，再按任务搜索、读取所需项并继续执行。npm 安装只提供 CLI 和插件文件，Codex 插件需单独安装。
+Codex 插件位于 `plugins/ai-know-me`：先确认 CLI 和文件配置，再按任务搜索，用 `run` 注入所需项并继续执行。npm 安装只提供 CLI 和插件文件，Codex 插件需单独安装。
 
-密钥保存在本地明文 YAML。`--reveal` 输出真实值；可直接传入目标进程，避免打印。若输出被返回给 AI，密钥会进入会话上下文。发布包仅包含程序、说明和占位示例。
+`run --env VAR=分类.名称 -- 程序 参数` 可重复使用 `--env` 注入多项；变量名须符合目标程序要求，示例脚本需自行读取 `API_KEY`。子进程输入输出均关闭，不适用于交互登录。
+
+密钥保存在本地明文 YAML。`run` 隐藏子进程输出，但目标程序仍可使用、保存或发送凭据，只运行可信程序。手动 `get --reveal` 会明文输出，AI 不应将其返回会话；因此“不进入上下文”仅指 `run` 的输出路径。发布包仅包含程序、说明和占位示例。
 
 本地开发：`npm install --ignore-scripts`、`npm test`。本地安装：`npm install --global . --ignore-scripts`。
 
@@ -61,3 +63,5 @@ codex plugin add ai-know-me@ai-know-me
 需要能访问本机文件和终端的运行环境。插件按用户语言回复，YAML 名称保持不变；CLI 当前帮助和错误提示为中文。
 
 文件中的凭据可能错误、过期、被撤销或权限不足。认证失败时核对服务错误并修改原文件；用户明确指定密码变体时使用对应条目，不自动轮试其他密码。
+
+凭据缺失、为空或为占位值时，`run` 提醒更新原文件并停止。执行失败会返回退出码及排查提示；不会自动联网检查过期，也不能单凭退出码判断失效。网络故障、权限不足与认证失败应分别处理。

@@ -1,7 +1,7 @@
 {
   "name": "ai-know-me",
-  "version": "0.2.2+codex.20260908201639",
-  "description": "Read website defaults, service tokens and LLM API keys from local YAML.",
+  "version": "0.3.0+codex.20260908202834",
+  "description": "Pass website defaults, service tokens and LLM keys directly to trusted processes.",
   "author": {
     "name": "ailuntz",
     "url": "https://www.ailuntz.com"
@@ -10,11 +10,11 @@
   "interface": {
     "displayName": "ai-know-me",
     "shortDescription": "网站默认账号 · 服务 Token · LLM Key",
-    "longDescription": "defaults：网站默认用户名、邮箱和密码；services：npm、GitLab、Cloudflare 等服务 Token；llm：模型平台 API Key。按当前任务查找名称，只读取需要的一项。",
+    "longDescription": "defaults：网站默认账号与密码；services：服务 Token；llm：模型 API Key。按需查找，通过 run 直接注入目标进程，不向会话返回凭据或子进程输出。缺失或执行失败时提醒。",
     "developerName": "ailuntz",
     "category": "Productivity",
     "capabilities": [],
-    "defaultPrompt": "使用 ai-know-me 为当前任务查找凭据：网站默认账号查 defaults，服务 Token 查 services，模型 API Key 查 llm。先搜索名称，再读取所需项并继续任务；如果尚无具体任务，只列出分类用途，不读取密钥。",
+    "defaultPrompt": "使用 ai-know-me 完成当前任务：网站默认账号查 defaults，服务 Token 查 services，模型 API Key 查 llm。确认 CLI 已安装，搜索名称，用 run 注入目标进程；不要将明文密钥返回会话。缺失或执行失败时提醒；没有具体任务时只说明分类用途。",
     "brandColor": "#16856B",
     "logo": "./assets/logo.png",
     "composerIcon": "./assets/icon.png",

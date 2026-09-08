@@ -36,3 +36,14 @@ test('CLI uses current file, init preserves it, old commands rejected',async t=>
   assert.equal(JSON.parse(run(['doctor','--json']).stdout).entries,7);
   await fs.symlink(file,path.join(dir,'link'));assert.equal(run(['init','--file',path.join(dir,'link')]).status,1);
 });
+
+test('run injects exact values, suppresses all child output and propagates failure',async t=>{
+  const dir=await fs.mkdtemp(path.join(os.tmpdir(),'akm-run-'));t.after(()=>fs.rm(dir,{recursive:true,force:true}));
+  const file=path.join(dir,'keys.yaml');await fs.writeFile(file,sample,{mode:0o600});
+  const run=(mapping,code)=>spawnSync(process.execPath,['bin/cli.js','run','--file',file,'--env',mapping,'--',process.execPath,'-e',code],{encoding:'utf8'});
+  const ok=run('TOKEN=services.gitlab',`console.log(process.env.TOKEN);console.error(Buffer.from(process.env.TOKEN).toString('base64'));process.exit(process.env.TOKEN==='SENTINEL_SECRET'?0:9)`);
+  assert.equal(ok.status,0);assert.deepEqual(JSON.parse(ok.stdout),{status:'completed',exit_code:0});assert.equal(ok.stderr,'');
+  const failed=run('TOKEN=services.gitlab','console.error(process.env.TOKEN);process.exit(7)');assert.equal(failed.status,7);assert.equal(JSON.parse(failed.stdout).exit_code,7);assert.ok(!(failed.stdout+failed.stderr).includes('SENTINEL_SECRET'));
+  for(const mapping of ['TOKEN=services.missing','TOKEN=services','BAD-NAME=services.gitlab']){const r=run(mapping,'process.exit(99)');assert.equal(r.status,1);}
+  await fs.writeFile(file,sample.replace('SENTINEL_SECRET','REPLACE_ME'));assert.equal(run('TOKEN=services.gitlab','process.exit(99)').status,1);
+});

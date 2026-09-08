@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 import { parseArgs } from 'node:util';
 import * as store from '../src/store.js';
+import { run } from '../src/run.js';
 
-const version = '0.2.2';
+const version = '0.3.0';
 const help = `ai-know-me ${version} — 本地密钥查询
 
 init --file PATH       指定已有 YAML 文件
@@ -10,11 +11,26 @@ list [GROUP]           列出名称，不显示值
 search QUERY           搜索名称或分类
 get NAME               查看条目；--reveal 显示原值
 get GROUP.NAME         按分类定位，支持名称中的点和空格
+run --env VAR=NAME -- PROGRAM ARGS
+                      向程序注入凭据；隐藏输出，仅返回退出状态
 doctor                 检查文件格式与权限
 
 通用：--file PATH --json
 直接编辑原 YAML 文件，查询立即生效。无 Web、MCP 或后台服务。`;
 try {
+  if (process.argv[2] === 'run') {
+    const args = process.argv.slice(3);
+    const sep = args.indexOf('--');
+    if (sep < 0) throw new Error('run 需要 -- 分隔目标程序');
+    const { values, positionals } = parseArgs({ args: args.slice(0, sep), allowPositionals: true, options: {
+      env: { type: 'string', multiple: true }, file: { type: 'string' }, json: { type: 'boolean' },
+    } });
+    if (positionals.length) throw new Error('run 参数无效');
+    const { data } = await store.read(await store.resolveFile(values.file));
+    const result = await run(data, values.env || [], args.slice(sep + 1));
+    console.log(JSON.stringify(result));
+    process.exitCode = result.exit_code;
+  } else {
   const { values: v, positionals: p } = parseArgs({ allowPositionals: true, options: {
     file: { type: 'string' }, json: { type: 'boolean' }, reveal: { type: 'boolean' },
     help: { type: 'boolean' }, version: { type: 'boolean' },
@@ -42,6 +58,7 @@ try {
     } else result = { valid: true, file, groups: Object.keys(data.assets), entries: store.summaries(data).length, privatePermissions: (stat.mode & 0o077) === 0 };
   }
   console.log(typeof result === 'string' && !v.json ? result : JSON.stringify(result, null, 2));
+  }
 } catch (error) {
   console.error(error.code ? `操作失败 (${error.code})` : error.message);
   process.exitCode = 1;
