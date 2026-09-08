@@ -1,9 +1,10 @@
 {
   "name": "ai-know-me",
-  "version": "0.2.2+codex.20260908200249",
+  "version": "0.2.2+codex.20260908201639",
   "description": "Read website defaults, service tokens and LLM API keys from local YAML.",
   "author": {
-    "name": "ailuntx"
+    "name": "ailuntz",
+    "url": "https://www.ailuntz.com"
   },
   "skills": "./skills/",
   "interface": {
@@ -17,8 +18,9 @@
     "brandColor": "#16856B",
     "logo": "./assets/logo.png",
     "composerIcon": "./assets/icon.png",
-    "websiteURL": "https://github.com/ailuntx/ai-know-me",
+    "websiteURL": "https://www.ailuntz.com",
     "privacyPolicyURL": "https://github.com/ailuntx/ai-know-me/blob/main/docs/privacy.md",
     "termsOfServiceURL": "https://github.com/ailuntx/ai-know-me/blob/main/docs/terms.md"
-  }
+  },
+  "homepage": "https://www.ailuntz.com"
 }

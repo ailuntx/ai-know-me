@@ -2,6 +2,10 @@
 
 Effective date / 生效日期: 2026-09-09
 
+Maintainer / 维护者: ailuntz
+
+Website / 网站: https://www.ailuntz.com
+
 Publisher / 发布者: ailuntz
 
 ai-know-me is a local CLI and a skill that instructs an AI assistant to use that CLI. It reads the YAML file you select. The CLI stores that file's path in a local configuration file. It does not operate a hosted credential service, collect analytics, or send your YAML or credentials to the publisher. It does not encrypt your file.

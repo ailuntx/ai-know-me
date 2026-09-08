@@ -28,8 +28,9 @@
     "type": "git",
     "url": "git+https://github.com/ailuntx/ai-know-me.git"
   },
-  "homepage": "https://github.com/ailuntx/ai-know-me",
+  "homepage": "https://www.ailuntz.com",
   "bugs": {
     "url": "https://github.com/ailuntx/ai-know-me/issues"
-  }
+  },
+  "author": "ailuntz"
 }

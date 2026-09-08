@@ -2,6 +2,10 @@
 
 Effective date / 生效日期: 2026-09-09
 
+Maintainer / 维护者: ailuntz
+
+Website / 网站: https://www.ailuntz.com
+
 Publisher / 发布者: ailuntz
 
 These terms cover use of the ai-know-me CLI and plugin. You may install and use the distributed CLI and plugin for your own authorized workflows. This permission does not grant general redistribution or sublicensing rights to the source code; other rights remain reserved unless separately granted.
