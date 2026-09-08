@@ -1,6 +1,6 @@
 {
   "name": "ai-know-me",
-  "version": "0.2.2+codex.20260908183426",
+  "version": "0.2.2+codex.20260908200249",
   "description": "Read website defaults, service tokens and LLM API keys from local YAML.",
   "author": {
     "name": "ailuntx"
@@ -10,12 +10,15 @@
     "displayName": "ai-know-me",
     "shortDescription": "网站默认账号 · 服务 Token · LLM Key",
     "longDescription": "defaults：网站默认用户名、邮箱和密码；services：npm、GitLab、Cloudflare 等服务 Token；llm：模型平台 API Key。按当前任务查找名称，只读取需要的一项。",
-    "developerName": "ailuntx",
+    "developerName": "ailuntz",
     "category": "Productivity",
     "capabilities": [],
     "defaultPrompt": "使用 ai-know-me 为当前任务查找凭据：网站默认账号查 defaults，服务 Token 查 services，模型 API Key 查 llm。先搜索名称，再读取所需项并继续任务；如果尚无具体任务，只列出分类用途，不读取密钥。",
-    "brandColor": "#7DE5C5",
+    "brandColor": "#16856B",
     "logo": "./assets/logo.png",
-    "composerIcon": "./assets/icon.png"
+    "composerIcon": "./assets/icon.png",
+    "websiteURL": "https://github.com/ailuntx/ai-know-me",
+    "privacyPolicyURL": "https://github.com/ailuntx/ai-know-me/blob/main/docs/privacy.md",
+    "termsOfServiceURL": "https://github.com/ailuntx/ai-know-me/blob/main/docs/terms.md"
   }
 }
