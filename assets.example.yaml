@@ -1,0 +1,13 @@
+version: 1
+assets:
+  defaults:
+    default_username: "example-user"
+    default_email: "user@example.com"
+    default_password: "REPLACE_ME"
+  services:
+    gitlab: "REPLACE_ME"
+    bfl.ai: "REPLACE_ME"
+    picsi utoken: "REPLACE_ME"
+  llm:
+    modelscope: "REPLACE_ME"
+    "10086": "REPLACE_ME"

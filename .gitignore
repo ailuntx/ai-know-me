@@ -1,0 +1,7 @@
+node_modules/
+*.tgz
+*.lock.tmp
+*.log
+assets.yaml
+assets.local.yaml
+.env

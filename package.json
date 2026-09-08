@@ -1,0 +1,35 @@
+{
+  "name": "ai-know-me",
+  "version": "0.2.1",
+  "description": "Query your local, human-maintained credential YAML",
+  "type": "module",
+  "bin": {
+    "ai-know-me": "bin/cli.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "plugins",
+    "assets.example.yaml",
+    "README.md",
+    "README.en.md"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "yaml": "^2.8.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ailuntx/ai-know-me.git"
+  },
+  "homepage": "https://github.com/ailuntx/ai-know-me",
+  "bugs": {
+    "url": "https://github.com/ailuntx/ai-know-me/issues"
+  }
+}
