@@ -1,6 +1,6 @@
 {
   "name": "ai-know-me",
-  "version": "0.2.1+codex.20260908181809",
+  "version": "0.2.2+codex.20260908183426",
   "description": "Read website defaults, service tokens and LLM API keys from local YAML.",
   "author": {
     "name": "ailuntx"
@@ -13,6 +13,9 @@
     "developerName": "ailuntx",
     "category": "Productivity",
     "capabilities": [],
-    "defaultPrompt": "使用 ai-know-me 为当前任务查找凭据：网站默认账号查 defaults，服务 Token 查 services，模型 API Key 查 llm。先搜索名称，再读取所需项并继续任务；如果尚无具体任务，只列出分类用途，不读取密钥。"
+    "defaultPrompt": "使用 ai-know-me 为当前任务查找凭据：网站默认账号查 defaults，服务 Token 查 services，模型 API Key 查 llm。先搜索名称，再读取所需项并继续任务；如果尚无具体任务，只列出分类用途，不读取密钥。",
+    "brandColor": "#7DE5C5",
+    "logo": "./assets/logo.png",
+    "composerIcon": "./assets/icon.png"
   }
 }

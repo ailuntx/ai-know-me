@@ -2,7 +2,7 @@
 import { parseArgs } from 'node:util';
 import * as store from '../src/store.js';
 
-const version = '0.2.1';
+const version = '0.2.2';
 const help = `ai-know-me ${version} — 本地密钥查询
 
 init --file PATH       指定已有 YAML 文件

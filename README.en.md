@@ -36,3 +36,5 @@ The skill responds in the user's language; CLI help and errors currently use Chi
 Credentials remain plaintext on disk. Capture revealed stdout directly into the consuming process when possible. If an AI tool prints it, the credential enters the conversation. Never commit your real credentials. The package includes only placeholder data.
 
 Development: `npm install --ignore-scripts`, then `npm test`.
+
+Stored credentials may be incorrect, expired, revoked or insufficiently scoped. Report the service error and update the original file as needed. Use a specific password variant when the user identifies it; do not cycle through variants.
