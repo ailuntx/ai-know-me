@@ -11,3 +11,6 @@ assets:
   llm:
     modelscope: "REPLACE_ME"
     "10086": "REPLACE_ME"
+
+  ssh:
+    default_key: "/absolute/path/to/private-key"

@@ -40,3 +40,5 @@ Development: `npm install --ignore-scripts`, then `npm test`.
 Stored credentials may be incorrect, expired, revoked or insufficiently scoped. Report the service error and update the original file as needed. Use a specific password variant when the user identifies it; do not cycle through variants.
 
 Missing, empty or placeholder credentials stop execution with a reminder. Nonzero child exits return a generic diagnostic, not proof of expiration. No automatic remote validity checks are performed.
+
+Use stored credentials for npm releases, Hugging Face uploads, Docker pushes, Cloudflare deployments, GitHub/GitLab, model APIs and SSH. Store an absolute private-key path in `ssh.default_key`; inject it with `run --env SSH_KEY_PATH=ssh.default_key -- program args`. The consumer must explicitly pass the path to `ssh -i`; SSH does not automatically read that variable. Never return private-key contents. Passphrase-protected keys may need an existing SSH agent.
