@@ -46,4 +46,4 @@ node "<script>" run --env API_KEY=llm.openrouter -- node your-script.mjs
 
 原 YAML 是本地明文。该脚本不输出凭据，但目标程序仍可保存或发送凭据，也不能阻止其他工具读取文件。仅向可信程序传递已授权的凭据；不要让 AI 读取原 YAML 或凭据日志。
 
-开发者可运行 `npm ci --ignore-scripts`、`npm test`。根目录 package.json 是 private 开发配置，不再提供或发布独立 npm CLI；开发依赖不需要在使用端安装。构建将 YAML 解析器和程序打包成一个脚本，并附带第三方许可。测试包含脱离源码和 node_modules 的插件运行验证。
+开发者可运行 `npm ci --ignore-scripts`、`npm test`。旧 npm 包已全部标记弃用；后续使用插件发布包。根目录 package.json 是 private 开发配置，不再提供或发布独立 npm CLI；开发依赖不需要在使用端安装。构建将 YAML 解析器和程序打包成一个脚本，并附带第三方许可。测试包含脱离源码和 node_modules 的插件运行验证。
