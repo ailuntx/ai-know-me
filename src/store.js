@@ -38,7 +38,7 @@ export async function resolveFile(file) {
     const config = JSON.parse(await fs.readFile(configPath(), 'utf8'));
     if (typeof config.file !== 'string' || !path.isAbsolute(config.file)) throw new Error();
     return config.file;
-  } catch { throw new Error('尚未初始化：ai-know-me init --file /absolute/path/我的密钥.yaml'); }
+  } catch { throw new Error('尚未初始化：使用随插件提供的脚本执行 init --file /absolute/path/我的密钥.yaml'); }
 }
 
 export async function read(file) {

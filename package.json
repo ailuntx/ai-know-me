@@ -1,29 +1,16 @@
 {
-  "name": "ai-know-me",
-  "version": "0.3.4",
-  "description": "Pass local YAML credentials directly to processes without exposing child output",
+  "name": "ai-know-me-plugin-dev",
+  "version": "0.4.0",
+  "description": "Development tools for the self-contained AI Know Me plugin",
   "type": "module",
-  "bin": {
-    "ai-know-me": "bin/cli.js"
-  },
-  "files": [
-    "bin",
-    "src",
-    "plugins",
-    "assets.example.yaml",
-    "README.md",
-    "README.en.md"
-  ],
   "scripts": {
-    "test": "node --test"
+    "build": "node scripts/build.mjs",
+    "test": "npm run build && node --test"
   },
   "engines": {
     "node": ">=22"
   },
   "license": "UNLICENSED",
-  "dependencies": {
-    "yaml": "^2.8.0"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ailuntx/ai-know-me.git"
@@ -32,5 +19,10 @@
   "bugs": {
     "url": "https://github.com/ailuntx/ai-know-me/issues"
   },
-  "author": "ailuntz"
+  "author": "ailuntz",
+  "private": true,
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "yaml": "2.9.0"
+  }
 }

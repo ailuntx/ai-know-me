@@ -2,43 +2,25 @@
 
 [中文](README.md) · English
 
-Pass local credentials directly to a target process. `run` injects environment variables and returns status only, keeping credential values and child output out of its tool result.
+Use local accounts and keys to complete publishing, deployment and model tasks. The plugin includes its executable script and YAML parser. **No npm package installation, MCP server or daemon.** Requires local shell access and Node.js 22+.
 
-| Group | Contents |
-| --- | --- |
-| `defaults` | Website default username, email, password and PIN |
-| `services` | npm, GitLab, Cloudflare and other service tokens |
-| `llm` | Model provider API keys |
+[Official plugin](https://chatgpt.com/plugins/plugins_6aa069eeb4408191a73c5eb02f19bbab) · [Releases](https://github.com/ailuntx/ai-know-me/releases) · [Privacy](docs/privacy.md) · [Terms](docs/terms.md) · [Support](https://github.com/ailuntx/ai-know-me/issues)
 
-Requires Node.js 22+ and local terminal access.
+Tell the assistant the absolute path to your credentials YAML, not its contents. It runs the bundled script with `init --file`, validates locally and stores only the path in `~/.config/ai-know-me/config.json`. Existing configuration from the former npm CLI works unchanged. Use `init --file` to switch files, `--file` for a one-off override, or `AKM_CONFIG_HOME` for another configuration directory. Configuration and credentials remain outside the plugin and survive plugin updates or removal.
 
-```sh
-npm install --global ai-know-me --ignore-scripts
-ai-know-me init --file /absolute/path/credentials.yaml
-ai-know-me list services
-ai-know-me search git
-ai-know-me run --env API_KEY=llm.modelscope -- node your-script.mjs
-```
+The YAML uses `version: 1` and an `assets` mapping. Categories are `defaults` (website defaults), `services` (service tokens), `llm` (model keys) and `ssh` (private-key file paths). Names are lowercase; values must be quoted strings, including PINs. See [the example](assets.example.yaml). Edit the original file directly; every invocation rereads it.
 
-Start with [assets.example.yaml](assets.example.yaml). Keep `version: 1` and the `assets` mapping. Use lowercase names and quoted string values, including PINs. Edit your file directly; each command reloads it. No Web UI, daemon, MCP server or write command.
-
-Install the Codex plugin separately:
+The entrypoint is `plugins/ai-know-me/skills/assets/SKILL.md`. Its `scripts/ai-know-me.mjs` is self-contained. Resolve the installed script path relative to the skill, rather than hardcoding a cache version:
 
 ```sh
-codex plugin marketplace add https://github.com/ailuntx/ai-know-me.git
-codex plugin add ai-know-me@ai-know-me
+node "<absolute-script-path>" init --file "/absolute/path/keys.yaml"
+node "<absolute-script-path>" doctor --json
+node "<absolute-script-path>" search cloudflare --json
+node "<absolute-script-path>" run --env API_KEY=llm.openrouter -- node your-script.mjs
 ```
 
-The skill responds in the user's language; CLI help and errors currently use Chinese. It requires access to the user's local shell and configured YAML, which may be unavailable in hosted environments.
+`list` and `search` return names only. `get` always masks values. `run` injects selected credentials into a trusted process, discards child input/output and returns status only. Repeat `--env` for multiple values. Missing, empty or placeholder credentials stop execution. Nonzero exit status alone does not establish expiration: distinguish authentication, permissions and network problems. No browser autofill or automatic password cycling. SSH paths must be passed explicitly to the SSH client; encrypted keys may need an existing SSH agent.
 
-`list` and `search` show names only. `get` always masks values, including JSON output. Version 0.3.4 removes `--reveal`; no CLI command prints credential values. Humans can open their original YAML locally, outside the AI conversation, when they need to view a value. Use qualified names for duplicates. Quote names containing spaces. `--json` returns JSON; `--file` overrides the configured path. `doctor` checks configuration and permissions.
+The YAML is plaintext. The script does not return secrets, but cannot prevent target programs from storing/sending them or other tools from reading files. Use only authorized credentials and trusted programs; keep raw YAML and credential-bearing logs out of conversations.
 
-Credentials remain plaintext on disk. Use `run --env VARIABLE=group.name -- program args` with trusted programs that consume the selected variables. Values pass directly into the child environment; child input/output is disabled and only execution status is returned. The child can still store or transmit credentials. Do not have an AI read the original YAML or credential-bearing logs; this tool does not restrict other file-reading tools. Never commit your real credentials. The package includes only placeholder data.
-
-Development: `npm install --ignore-scripts`, then `npm test`.
-
-Stored credentials may be incorrect, expired, revoked or insufficiently scoped. Report the service error and update the original file as needed. Use a specific password variant when the user identifies it; do not cycle through variants.
-
-Missing, empty or placeholder credentials stop execution with a reminder. Nonzero child exits return a generic diagnostic, not proof of expiration. No automatic remote validity checks are performed.
-
-Use stored credentials for npm releases, Hugging Face uploads, Docker pushes, Cloudflare deployments, GitHub/GitLab, model APIs and SSH. Store an absolute private-key path in `ssh.default_key`; inject it with `run --env SSH_KEY_PATH=ssh.default_key -- program args`. The consumer must explicitly pass the path to `ssh -i`; SSH does not automatically read that variable. Never return private-key contents. Passphrase-protected keys may need an existing SSH agent.
+Development only: `npm ci --ignore-scripts`, then `npm test`. The root package is private build/test tooling, not a distributable npm CLI. The build embeds the YAML dependency and includes its license. Tests exercise the plugin away from the source tree and node_modules.

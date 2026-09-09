@@ -2,70 +2,48 @@
 
 中文 · [English](README.en.md)
 
-安全调用本地凭据，直接传递给目标进程。
+安全调用本地账号与密钥，继续完成发布、部署和模型接入。**执行脚本随插件提供，无需安装 npm 包、MCP 或后台服务。** 需要本机终端和 Node.js 22+。
 
-`run` 通过环境变量注入所需项，不向会话返回凭据或子进程输出，只返回执行状态。
+[官方插件](https://chatgpt.com/plugins/plugins_6aa069eeb4408191a73c5eb02f19bbab) · [发布包](https://github.com/ailuntx/ai-know-me/releases) · [Privacy](docs/privacy.md) · [Terms](docs/terms.md) · [Support](https://github.com/ailuntx/ai-know-me/issues)
+
+安装后告诉 AI：“我的凭据 YAML 在 `/absolute/path/我的密钥.yaml`，请配置 AI Know Me。”只提供路径，不发送文件内容。插件会运行随包脚本的 `init --file`，验证格式并把路径保存到 `~/.config/ai-know-me/config.json`。以后自动复用；旧版 CLI 的配置直接兼容。换文件时提供新路径即可。
 
 | 分类 | 内容 |
 | --- | --- |
 | `defaults` | 网站默认用户名、邮箱、密码与 PIN |
-| `services` | npm、GitLab、Cloudflare 等服务 Token |
+| `services` | npm、Hugging Face、Docker、GitHub/GitLab、Cloudflare 等服务 Token |
 | `llm` | 模型平台 API Key |
+| `ssh` | SSH 私钥文件的绝对路径 |
 
-需要 Node.js 22+。
-
-```bash
-npm install --global ai-know-me --ignore-scripts
-ai-know-me init --file "/absolute/path/我的密钥.yaml"
-ai-know-me list services
-ai-know-me search git
-ai-know-me run --env API_KEY=llm.modelscope -- node your-script.mjs
-```
-
-文件格式：每项一行，名称小写，值用引号包裹。
+文件每项一行，名称小写，值加引号。直接编辑原文件，下一次调用立即生效：
 
 ```yaml
 version: 1
 assets:
   defaults:
     default_username: "example-user"
-    default_email: "user@example.com"
-    default_password: "REPLACE_ME"
     default_pin: "001234"
   services:
     npmjs: "REPLACE_ME"
-    gitlab: "REPLACE_ME"
   llm:
-    modelscope: "REPLACE_ME"
+    openrouter: "REPLACE_ME"
+  ssh:
+    default_key: "/absolute/path/id_ed25519"
 ```
 
-直接编辑原文件，下一次查询立即生效。`init` 只在 `~/.config/ai-know-me/config.json` 登记已有文件路径；`--file` 可临时指定另一份文件。没有 Web、MCP、后台服务或写入命令。
+插件入口：`plugins/ai-know-me/skills/assets/SKILL.md`。脚本位于该技能的 `scripts/ai-know-me.mjs`；以下 `<script>` 代表安装后的实际绝对路径，不能照抄占位符或固定版本缓存路径。
 
-`list [分类]`、`search <关键词>` 只列名称；`get <分类.名称>` 始终遮盖值，包括 JSON 输出。自 0.3.4 起已删除 `--reveal`，不提供打印凭据原文的命令。人类需要查看时，请自行在本机打开原 YAML，保持在 AI 对话之外。名称唯一时可省略分类。点号、空格可用于条目名，含空格的参数需加引号；PIN 等数字值必须加引号。支持额外的小写分类。
-
-`doctor` 检查文件与权限，`--json` 提供 JSON 输出。默认网站密码不代表每个网站都使用它，不自动尝试密码变体。
-
-Codex 插件位于 `plugins/ai-know-me`：先确认 CLI 和文件配置，再按任务搜索，用 `run` 注入所需项并继续执行。npm 安装只提供 CLI 和插件文件，Codex 插件需单独安装。
-
-`run --env VAR=分类.名称 -- 程序 参数` 可重复使用 `--env` 注入多项；变量名须符合目标程序要求，示例脚本需自行读取 `API_KEY`。子进程输入输出均关闭，不适用于交互登录。
-
-密钥保存在本地明文 YAML。`run` 将选中项直接注入目标进程的环境变量，关闭子进程输入输出，只返回执行状态。目标程序仍可使用、保存或发送凭据，只运行可信程序。不要让 AI 读取原 YAML 或凭据日志；此工具不限制其他文件读取工具。发布包仅包含程序、说明和占位示例。
-
-本地开发：`npm install --ignore-scripts`、`npm test`。本地安装：`npm install --global . --ignore-scripts`。
-
-安装 Codex 插件：
-
-```bash
-codex plugin marketplace add https://github.com/ailuntx/ai-know-me.git
-codex plugin add ai-know-me@ai-know-me
+```sh
+node "<script>" init --file "/absolute/path/我的密钥.yaml"
+node "<script>" doctor --json
+node "<script>" search cloudflare --json
+node "<script>" run --env API_KEY=llm.openrouter -- node your-script.mjs
 ```
 
-需要能访问本机文件和终端的运行环境。插件按用户语言回复，YAML 名称保持不变；CLI 当前帮助和错误提示为中文。
+`list`、`search` 只返回名称；`get` 始终遮盖值；`run` 直接注入环境变量，关闭子进程输入输出，只返回执行状态。可重复 `--env` 注入多项。`--file` 临时指定另一份 YAML；`AKM_CONFIG_HOME` 可替换配置目录。程序不创建或改写密钥文件，配置文件仅登记路径并保存在插件之外，插件升级或卸载不会删除它。
 
-文件中的凭据可能错误、过期、被撤销或权限不足。认证失败时核对服务错误并修改原文件；用户明确指定密码变体时使用对应条目，不自动轮试其他密码。
+缺失、为空或占位值会阻止执行并提醒更新原文件。执行失败会报告状态；单凭退出码不能判断凭据过期，需区分认证失败、权限不足和网络问题。网站默认值不代表所有网站都使用它，不自动轮试密码。SSH 注入的是路径，目标程序需将它传给 `ssh -i`；加密私钥可能需要现有 SSH agent。没有浏览器自动填写。
 
-凭据缺失、为空或为占位值时，`run` 提醒更新原文件并停止。执行失败会返回退出码及排查提示；不会自动联网检查过期，也不能单凭退出码判断失效。网络故障、权限不足与认证失败应分别处理。
+原 YAML 是本地明文。该脚本不输出凭据，但目标程序仍可保存或发送凭据，也不能阻止其他工具读取文件。仅向可信程序传递已授权的凭据；不要让 AI 读取原 YAML 或凭据日志。
 
-支持发布 npm 包、上传 Hugging Face 模型与数据集、推送 Docker 镜像、部署 Cloudflare Workers/Pages、访问 GitHub/GitLab、接入模型 API，以及使用 SSH 私钥连接服务器。按任务查找已有条目，不自动创建账号或授予权限。
-
-`ssh.default_key` 保存私钥文件的绝对路径；私钥留在原文件。通过 `run --env SSH_KEY_PATH=ssh.default_key -- 程序 参数` 注入路径，消费程序需显式将它交给 `ssh -i`。SSH 不会自动读取这个变量。检查文件存在和可读即可，不输出私钥正文；加密私钥可能需要已有 SSH agent。
+开发者可运行 `npm ci --ignore-scripts`、`npm test`。根目录 package.json 是 private 开发配置，不再提供或发布独立 npm CLI；开发依赖不需要在使用端安装。构建将 YAML 解析器和程序打包成一个脚本，并附带第三方许可。测试包含脱离源码和 node_modules 的插件运行验证。

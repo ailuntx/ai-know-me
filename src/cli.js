@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import { parseArgs } from 'node:util';
-import * as store from '../src/store.js';
-import { run } from '../src/run.js';
+import * as store from './store.js';
+import { run } from './run.js';
 
-const version = '0.3.4';
+const version = '0.4.0';
 const help = `ai-know-me ${version} — 本地密钥查询
 
 init --file PATH       指定已有 YAML 文件

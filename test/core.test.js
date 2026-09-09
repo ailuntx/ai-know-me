@@ -30,7 +30,7 @@ test('discovery and get return metadata or masked values, even with a legacy ext
 test('CLI uses current file, init preserves it, old commands rejected',async t=>{
   const dir=await fs.mkdtemp(path.join(os.tmpdir(),'akm-v2-'));t.after(()=>fs.rm(dir,{recursive:true,force:true}));
   const file=path.join(dir,'我的密钥.yaml');await fs.writeFile(file,sample,{mode:0o600});
-  const run=args=>spawnSync(process.execPath,['bin/cli.js',...args],{cwd:new URL('..',import.meta.url),env:{...process.env,AKM_CONFIG_HOME:path.join(dir,'config')},encoding:'utf8'});
+  const run=args=>spawnSync(process.execPath,['plugins/ai-know-me/skills/assets/scripts/ai-know-me.mjs',...args],{cwd:new URL('..',import.meta.url),env:{...process.env,AKM_CONFIG_HOME:path.join(dir,'config')},encoding:'utf8'});
   assert.equal(run(['init','--file',file]).status,0);
   assert.equal(await fs.readFile(file,'utf8'),sample);
   assert.equal(run(['get','gitlab']).stdout.trim(),'••••••');
@@ -48,7 +48,7 @@ test('CLI uses current file, init preserves it, old commands rejected',async t=>
 test('CLI discovery, masked get, JSON and rejected reveal never return credential values',async t=>{
   const dir=await fs.mkdtemp(path.join(os.tmpdir(),'akm-output-'));t.after(()=>fs.rm(dir,{recursive:true,force:true}));
   const file=path.join(dir,'keys.yaml');await fs.writeFile(file,sample,{mode:0o600});
-  const run=args=>spawnSync(process.execPath,['bin/cli.js',...args,'--file',file],{encoding:'utf8'});
+  const run=args=>spawnSync(process.execPath,['plugins/ai-know-me/skills/assets/scripts/ai-know-me.mjs',...args,'--file',file],{encoding:'utf8'});
   for(const args of [['list'],['list','services'],['search','git'],['get','gitlab'],['get','services'],['doctor']]) {
     for(const format of [[],['--json']]) {
       const result=run([...args,...format]);
@@ -71,7 +71,7 @@ test('CLI discovery, masked get, JSON and rejected reveal never return credentia
 test('run injects exact values, suppresses all child output and propagates failure',async t=>{
   const dir=await fs.mkdtemp(path.join(os.tmpdir(),'akm-run-'));t.after(()=>fs.rm(dir,{recursive:true,force:true}));
   const file=path.join(dir,'keys.yaml');await fs.writeFile(file,sample,{mode:0o600});
-  const run=(mapping,code)=>spawnSync(process.execPath,['bin/cli.js','run','--file',file,'--env',mapping,'--',process.execPath,'-e',code],{encoding:'utf8'});
+  const run=(mapping,code)=>spawnSync(process.execPath,['plugins/ai-know-me/skills/assets/scripts/ai-know-me.mjs','run','--file',file,'--env',mapping,'--',process.execPath,'-e',code],{encoding:'utf8'});
   const ok=run('TOKEN=services.gitlab',`console.log(process.env.TOKEN);console.error(Buffer.from(process.env.TOKEN).toString('base64'));process.exit(process.env.TOKEN==='SENTINEL_SECRET'?0:9)`);
   assert.equal(ok.status,0);assert.deepEqual(JSON.parse(ok.stdout),{status:'completed',exit_code:0});assert.equal(ok.stderr,'');
   const failed=run('TOKEN=services.gitlab','console.error(process.env.TOKEN);process.exit(7)');assert.equal(failed.status,7);assert.equal(JSON.parse(failed.stdout).exit_code,7);assert.ok(!(failed.stdout+failed.stderr).includes('SENTINEL_SECRET'));
@@ -85,7 +85,7 @@ test('run injects exact values, suppresses all child output and propagates failu
 test('run preserves PINs, dotted and spaced names and isolates injected variables',async t=>{
   const dir=await fs.mkdtemp(path.join(os.tmpdir(),'akm-env-'));t.after(()=>fs.rm(dir,{recursive:true,force:true}));
   const file=path.join(dir,'keys.yaml');await fs.writeFile(file,sample,{mode:0o600});
-  const args=['bin/cli.js','run','--file',file];
+  const args=['plugins/ai-know-me/skills/assets/scripts/ai-know-me.mjs','run','--file',file];
   for(const mapping of ['AKM_TEST_PIN=defaults.default_pin','AKM_TEST_DOT=services.bfl.ai','AKM_TEST_SPACE=services.picsi utoken','AKM_TEST_NUMBER=llm.10086']) args.push('--env',mapping);
   const code=`const e=process.env;process.exit(e.AKM_TEST_PIN==='0012'&&e.AKM_TEST_DOT==='DOT_SECRET'&&e.AKM_TEST_SPACE==='SPACE_SECRET'&&e.AKM_TEST_NUMBER==='NUMBER_NAME'?0:9)`;
   const result=spawnSync(process.execPath,[...args,'--',process.execPath,'-e',code],{encoding:'utf8'});
@@ -100,4 +100,32 @@ test('plugin starter prompts use the composer array schema',async()=>{
   const prompts=manifest.interface.defaultPrompt;
   assert.ok(Array.isArray(prompts));assert.ok(prompts.length>=1&&prompts.length<=3);
   for(const prompt of prompts)assert.ok(typeof prompt==='string'&&prompt.trim().length>0&&prompt.length<=128);
+});
+
+test('bundled plugin runs in isolation and keeps configuration outside its install directory',async t=>{
+  const dir=await fs.mkdtemp(path.join(os.tmpdir(),'akm-standalone-'));
+  t.after(()=>fs.rm(dir,{recursive:true,force:true}));
+  const install=path.join(dir,'plugin-copy');
+  await fs.cp(new URL('../plugins/ai-know-me',import.meta.url),install,{recursive:true});
+  const script=path.join(install,'skills/assets/scripts/ai-know-me.mjs');
+  const file=path.join(dir,'keys with spaces.yaml');
+  const config=path.join(dir,'user-config');
+  await fs.writeFile(file,sample,{mode:0o600});
+  const env={...process.env,AKM_CONFIG_HOME:config,NODE_PATH:'',PATH:path.dirname(process.execPath)};
+  const invoke=(...args)=>spawnSync(process.execPath,[script,...args],{cwd:dir,env,encoding:'utf8'});
+  assert.equal(invoke('init','--file',file).status,0);
+  assert.deepEqual(JSON.parse(await fs.readFile(path.join(config,'config.json'),'utf8')),{file});
+  assert.equal(await fs.readFile(file,'utf8'),sample);
+  assert.equal(invoke('search','git','--json').status,0);
+  const result=invoke('run','--env','TOKEN=services.gitlab','--',process.execPath,'-e',"console.log(process.env.TOKEN);process.exit(process.env.TOKEN==='SENTINEL_SECRET'?0:8)");
+  assert.equal(result.status,0);assert.deepEqual(JSON.parse(result.stdout),{status:'completed',exit_code:0});assert.equal(result.stderr,'');
+  await fs.rm(install,{recursive:true});
+  assert.equal(await fs.readFile(file,'utf8'),sample);
+  await fs.cp(new URL('../plugins/ai-know-me',import.meta.url),install,{recursive:true});
+  assert.equal(invoke('doctor','--json').status,0);
+  const other=path.join(dir,'another.yaml');await fs.writeFile(other,sample.replace('SENTINEL_SECRET','SECOND_VALUE'));
+  assert.equal(invoke('init','--file',other).status,0);
+  assert.equal(invoke('run','--env','TOKEN=services.gitlab','--',process.execPath,'-e',"process.exit(process.env.TOKEN==='SECOND_VALUE'?0:8)").status,0);
+  assert.equal(invoke('run','--file',file,'--env','TOKEN=services.gitlab','--',process.execPath,'-e',"process.exit(process.env.TOKEN==='SENTINEL_SECRET'?0:8)").status,0);
+  assert.equal(JSON.parse(await fs.readFile(path.join(config,'config.json'),'utf8')).file,other);
 });

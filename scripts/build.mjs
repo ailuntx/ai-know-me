@@ -1,0 +1,11 @@
+import { build } from 'esbuild';
+import fs from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+const root=fileURLToPath(new URL('..',import.meta.url));
+const out=path.join(root,'plugins/ai-know-me/skills/assets/scripts');
+await fs.mkdir(out,{recursive:true});
+await build({absWorkingDir:root,entryPoints:['src/cli.js'],outfile:path.join(out,'ai-know-me.mjs'),bundle:true,platform:'node',format:'esm',target:'node22',legalComments:'inline',banner:{js:'import { createRequire } from "node:module"; const require = createRequire(import.meta.url);'}});
+const license=await fs.readFile(path.join(root,'node_modules/yaml/LICENSE'),'utf8');
+await fs.writeFile(path.join(out,'THIRD-PARTY-NOTICES.txt'),'Bundled dependency: yaml 2.9.0\nhttps://github.com/eemeli/yaml\n\n'+license);
+console.log('Built self-contained plugin script; Node.js 22+ only.');
