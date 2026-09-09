@@ -65,22 +65,22 @@ export function summaries(data, query = '') {
   ).filter(entry => entry.path.includes(query));
 }
 
-export function get(data, query, reveal = false) {
+// Resolve names to metadata only; credential values are consumed inside run.
+export function resolveEntry(data, query) {
   query = query.toLowerCase();
   // Qualified paths match the full stored name, including dots and spaces.
   const all = summaries(data);
   const qualified = all.filter(entry => entry.path === query);
   const matches = qualified.length ? qualified : all.filter(entry => entry.name === query);
   if (matches.length > 1) throw new Error('名称在多个分类中重复，请使用分类.名称');
-  if (matches.length === 1) {
-    const { group, name } = matches[0];
-    const value = data.assets[group][name];
-    if (reveal && (!value.trim() || value === 'REPLACE_ME')) throw new Error('凭据为空或占位值；请更新原 YAML 文件');
-    return reveal ? value : '••••••';
-  }
+  if (matches.length === 1) return matches[0];
   if (Object.hasOwn(data.assets, query)) {
-    if (reveal) throw new Error('请指定单个名称，不能一次显示整个分类的密钥');
     return summaries(data).filter(entry => entry.group === query);
   }
   throw new Error('未找到凭据；请检查名称或在原 YAML 文件中补充');
+}
+
+export function get(data, query) {
+  const entry = resolveEntry(data, query);
+  return Array.isArray(entry) ? entry : '••••••';
 }

@@ -1,6 +1,6 @@
 {
   "name": "ai-know-me",
-  "version": "0.3.3+codex.20260908221516",
+  "version": "0.3.4",
   "description": "Use your local accounts and API keys to keep tasks moving, without pasting secrets into chat.",
   "author": {
     "name": "ailuntz",
@@ -10,7 +10,7 @@
   "interface": {
     "displayName": "AI Know Me",
     "shortDescription": "安全调用账号、Token、API Key 与 SSH 密钥，完成发布、部署和模型接入",
-    "longDescription": "发布 npm 包、上传 Hugging Face 模型与数据集、推送 Docker 镜像、部署 Cloudflare Workers 或 Pages、访问 GitHub/GitLab、连接 SSH 服务器、接入模型 API——需要凭据时，AI Know Me 从你的本地文件找到所需项，交给目标程序继续完成任务。\n\n统一查找网站默认账号与密码、服务 Token、模型 API Key 和 SSH 私钥路径。你直接维护原始 YAML，修改后立即生效；缺失凭据或执行失败时，会提醒检查配置、有效性与权限。\n\n通过 run 将所需项直接传入目标进程，不向会话返回凭据或子进程输出。SSH 登记文件路径，私钥由 SSH 客户端读取。需要本机终端与 Node.js 22+；仅使用任务已授权的凭据，手动明文查询不适用上述输出保护。",
+    "longDescription": "发布 npm 包、上传 Hugging Face 模型与数据集、推送 Docker 镜像、部署 Cloudflare Workers 或 Pages、访问 GitHub/GitLab、连接 SSH 服务器、接入模型 API——需要凭据时，AI Know Me 从你的本地文件找到所需项，交给目标程序继续完成任务。\n\n统一查找网站默认账号与密码、服务 Token、模型 API Key 和 SSH 私钥路径。你直接维护原始 YAML，修改后立即生效；缺失凭据或执行失败时，会提醒检查配置、有效性与权限。\n\n通过 run 将所需项直接传入目标进程，不向会话返回凭据或子进程输出。查询始终遮盖值，不提供明文输出命令；人类需要查看时可自行在本机打开原 YAML。SSH 登记文件路径，私钥由 SSH 客户端读取。需要本机终端、Node.js 22+ 与 CLI 0.3.4+；仅使用任务已授权的凭据。",
     "developerName": "ailuntz",
     "category": "Security",
     "capabilities": [],

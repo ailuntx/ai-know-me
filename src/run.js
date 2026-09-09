@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process';
-import { get } from './store.js';
+import { resolveEntry } from './store.js';
 
 // No shell expansion and no child output in the agent-facing result.
 export async function run(data, mappings, command) {
@@ -14,7 +14,9 @@ export async function run(data, mappings, command) {
       throw new Error('--env 必须是唯一的环境变量名=凭据名称');
     }
     seen.add(name);
-    const value = get(data, query, true);
+    const entry = resolveEntry(data, query);
+    if (Array.isArray(entry)) throw new Error('请指定单个凭据名称，不能注入整个分类');
+    const value = data.assets[entry.group][entry.name];
     if (typeof value !== 'string' || !value.trim() || value === 'REPLACE_ME' || value.includes('\0')) {
       throw new Error('凭据为空、占位值或不可用；请更新原 YAML 文件');
     }

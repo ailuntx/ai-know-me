@@ -31,9 +31,9 @@ codex plugin add ai-know-me@ai-know-me
 
 The skill responds in the user's language; CLI help and errors currently use Chinese. It requires access to the user's local shell and configured YAML, which may be unavailable in hosted environments.
 
-`list` and `search` show names only. `get` masks values unless `--reveal` is supplied; only a single value can be revealed. Use qualified names for duplicates. Quote names containing spaces. `--json` returns JSON; `--file` overrides the configured path. `doctor` checks configuration and permissions.
+`list` and `search` show names only. `get` always masks values, including JSON output. Version 0.3.4 removes `--reveal`; no CLI command prints credential values. Humans can open their original YAML locally, outside the AI conversation, when they need to view a value. Use qualified names for duplicates. Quote names containing spaces. `--json` returns JSON; `--file` overrides the configured path. `doctor` checks configuration and permissions.
 
-Credentials remain plaintext on disk. Use `run --env VARIABLE=group.name -- program args` with trusted programs that consume the selected variables. Child input/output is disabled. The child can still store or transmit credentials. Manual `get --reveal` is not protected by this output boundary. If an AI tool prints it, the credential enters the conversation. Never commit your real credentials. The package includes only placeholder data.
+Credentials remain plaintext on disk. Use `run --env VARIABLE=group.name -- program args` with trusted programs that consume the selected variables. Values pass directly into the child environment; child input/output is disabled and only execution status is returned. The child can still store or transmit credentials. Do not have an AI read the original YAML or credential-bearing logs; this tool does not restrict other file-reading tools. Never commit your real credentials. The package includes only placeholder data.
 
 Development: `npm install --ignore-scripts`, then `npm test`.
 
