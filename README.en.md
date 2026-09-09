@@ -23,4 +23,4 @@ node "<absolute-script-path>" run --env API_KEY=llm.openrouter -- node your-scri
 
 The YAML is plaintext. The script does not return secrets, but cannot prevent target programs from storing/sending them or other tools from reading files. Use only authorized credentials and trusted programs; keep raw YAML and credential-bearing logs out of conversations.
 
-Development only: `npm ci --ignore-scripts`, then `npm test`. All versions of the former npm package are deprecated; use plugin releases. The root package is private build/test tooling, not a distributable npm CLI. The build embeds the YAML dependency and includes its license. Tests exercise the plugin away from the source tree and node_modules.
+Development only: `npm ci --ignore-scripts`, then `npm test`. The former npm package has been unpublished. The official directory now provides the bundled-script plugin version 0.4.0. The root package is private build/test tooling, not a distributable npm CLI. The build embeds the YAML dependency and includes its license. Tests exercise the plugin away from the source tree and node_modules.
