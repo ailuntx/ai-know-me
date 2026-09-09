@@ -5,14 +5,14 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import * as store from '../src/store.js';
-const sample = `# user comment\nversion: 1\nassets:\n  defaults:\n    default_pin: "0012"\n  services:\n    gitlab: "SENTINEL_SECRET"\n    bfl.ai: "DOT_SECRET"\n    picsi utoken: "SPACE_SECRET"\n    shared: "ONE"\n  llm:\n    shared: "TWO"\n    "10086": "NUMBER_NAME"\n`;
+const sample = `# user comment\nversion: 1\nassets:\n  web:\n    web_pin: "0012"\n  services:\n    gitlab: "SENTINEL_SECRET"\n    bfl.ai: "DOT_SECRET"\n    picsi utoken: "SPACE_SECRET"\n    shared: "ONE"\n  llm:\n    shared: "TWO"\n    "10086": "NUMBER_NAME"\n`;
 test('reject invalid, duplicate, uppercase and non-string data without leaking values', () => {
   for (const text of ['version: 1\nversion: 1\nassets: {}', 'version: 1\nassets: &a {}', 'version: 1\nassets: {}\n---\nx: y', 'version: 1\nassets: {llm: {token: 123}}', 'version: 1\nassets: {llm: {TOKEN: secret}}', 'version: 1\nassets: {llm: {token: !!str secret}}', 'version: 1\nassets: {llm: {token: {nested: secret}}}']) assert.throws(() => store.document(text));
   try { store.document(sample+'bad: [SECRET'); } catch(e) { assert.ok(!e.message.includes('SECRET')); }
 });
 test('name resolution returns only metadata for flat, qualified, dotted, spaced and numeric names', () => {
   const {data} = store.document(sample);
-  for (const [q,expected] of [['gitlab','services.gitlab'],['SERVICES.GITLAB','services.gitlab'],['bfl.ai','services.bfl.ai'],['services.bfl.ai','services.bfl.ai'],['services.picsi utoken','services.picsi utoken'],['10086','llm.10086'],['defaults.default_pin','defaults.default_pin']]) {
+  for (const [q,expected] of [['gitlab','services.gitlab'],['SERVICES.GITLAB','services.gitlab'],['bfl.ai','services.bfl.ai'],['services.bfl.ai','services.bfl.ai'],['services.picsi utoken','services.picsi utoken'],['10086','llm.10086'],['web.web_pin','web.web_pin']]) {
     const entry = store.resolveEntry(data,q);
     assert.deepEqual(Object.keys(entry).sort(),['group','name','path']);
     assert.equal(entry.path,expected);
@@ -86,13 +86,39 @@ test('run preserves PINs, dotted and spaced names and isolates injected variable
   const dir=await fs.mkdtemp(path.join(os.tmpdir(),'akm-env-'));t.after(()=>fs.rm(dir,{recursive:true,force:true}));
   const file=path.join(dir,'keys.yaml');await fs.writeFile(file,sample,{mode:0o600});
   const args=['plugins/ai-know-me/skills/assets/scripts/ai-know-me.mjs','run','--file',file];
-  for(const mapping of ['AKM_TEST_PIN=defaults.default_pin','AKM_TEST_DOT=services.bfl.ai','AKM_TEST_SPACE=services.picsi utoken','AKM_TEST_NUMBER=llm.10086']) args.push('--env',mapping);
+  for(const mapping of ['AKM_TEST_PIN=web.web_pin','AKM_TEST_DOT=services.bfl.ai','AKM_TEST_SPACE=services.picsi utoken','AKM_TEST_NUMBER=llm.10086']) args.push('--env',mapping);
   const code=`const e=process.env;process.exit(e.AKM_TEST_PIN==='0012'&&e.AKM_TEST_DOT==='DOT_SECRET'&&e.AKM_TEST_SPACE==='SPACE_SECRET'&&e.AKM_TEST_NUMBER==='NUMBER_NAME'?0:9)`;
   const result=spawnSync(process.execPath,[...args,'--',process.execPath,'-e',code],{encoding:'utf8'});
   assert.equal(result.status,0);assert.deepEqual(JSON.parse(result.stdout),{status:'completed',exit_code:0});assert.equal(result.stderr,'');
   assert.equal(process.env.AKM_TEST_PIN,undefined);
   const duplicate=spawnSync(process.execPath,[...args,'--env','AKM_TEST_PIN=services.gitlab','--',process.execPath,'-e','process.exit(99)'],{encoding:'utf8'});
   assert.equal(duplicate.status,1);assert.ok(!(duplicate.stdout+duplicate.stderr).includes('SENTINEL_SECRET'));
+});
+
+test('system passwords stay separate, masked and unavailable until filled',async t=>{
+  const dir=await fs.mkdtemp(path.join(os.tmpdir(),'akm-system-'));
+  t.after(()=>fs.rm(dir,{recursive:true,force:true}));
+  const file=path.join(dir,'keys.yaml');
+  const template=await fs.readFile(new URL('../assets.example.yaml',import.meta.url),'utf8');
+  const {doc,data}=store.document(template);
+  assert.equal(data.assets.system.macos_login_password,'');
+  assert.equal(data.assets.system.macos_keychain_password,'');
+  const invoke=(...args)=>spawnSync(process.execPath,['plugins/ai-know-me/skills/assets/scripts/ai-know-me.mjs',...args],{encoding:'utf8'});
+  const use=(...mappings)=>invoke('run','--file',file,...mappings.flatMap(m=>['--env',m]),'--',process.execPath,'-e',"process.exit(process.env.AKM_LOGIN==='LOGIN_SENTINEL_测试'&&process.env.AKM_KEYCHAIN==='KEYCHAIN_SENTINEL_$`'?0:9)");
+  await fs.writeFile(file,template,{mode:0o600});
+  assert.equal(use('AKM_LOGIN=system.macos_login_password','AKM_KEYCHAIN=system.macos_keychain_password').status,1);
+  doc.setIn(['assets','system','macos_login_password'],'LOGIN_SENTINEL_测试');
+  await fs.writeFile(file,String(doc));
+  assert.equal(use('AKM_LOGIN=system.macos_login_password','AKM_KEYCHAIN=system.macos_keychain_password').status,1);
+  doc.setIn(['assets','system','macos_keychain_password'],'KEYCHAIN_SENTINEL_$`');
+  await fs.writeFile(file,String(doc));
+  const result=use('AKM_LOGIN=system.macos_login_password','AKM_KEYCHAIN=system.macos_keychain_password');
+  assert.equal(result.status,0);assert.deepEqual(JSON.parse(result.stdout),{status:'completed',exit_code:0});
+  for(const args of [['list','system'],['get','system.macos_login_password'],['get','system.macos_keychain_password']]) {
+    const shown=invoke(...args,'--file',file,'--json');
+    assert.equal(shown.status,0);
+    assert.ok(!/LOGIN_SENTINEL|KEYCHAIN_SENTINEL/.test(shown.stdout+shown.stderr));
+  }
 });
 
 test('plugin starter prompts use the composer array schema',async()=>{

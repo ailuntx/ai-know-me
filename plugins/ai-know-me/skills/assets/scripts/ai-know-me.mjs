@@ -7496,7 +7496,7 @@ async function run(data, mappings, command) {
 }
 
 // src/cli.js
-var version = "0.4.0";
+var version = "0.5.0";
 var help = `ai-know-me ${version} \u2014 \u672C\u5730\u5BC6\u94A5\u67E5\u8BE2
 
 init --file PATH       \u6307\u5B9A\u5DF2\u6709 YAML \u6587\u4EF6

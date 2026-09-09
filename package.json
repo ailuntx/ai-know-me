@@ -1,6 +1,6 @@
 {
   "name": "ai-know-me-plugin-dev",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Development tools for the self-contained AI Know Me plugin",
   "type": "module",
   "scripts": {

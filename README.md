@@ -10,7 +10,8 @@
 
 | 分类 | 内容 |
 | --- | --- |
-| `defaults` | 网站默认用户名、邮箱、密码与 PIN |
+| `web` | 网站用户名、邮箱、密码变体与 PIN |
+| `system` | 本机 macOS 登录密码、登录钥匙串密码 |
 | `services` | npm、Hugging Face、Docker、GitHub/GitLab、Cloudflare 等服务 Token |
 | `llm` | 模型平台 API Key |
 | `ssh` | SSH 私钥文件的绝对路径 |
@@ -20,9 +21,16 @@
 ```yaml
 version: 1
 assets:
-  defaults:
-    default_username: "example-user"
-    default_pin: "001234"
+  web:
+    web_username: "example-user"
+    web_email: "user@example.com"
+    web_password_with_special_char: "REPLACE_ME"
+    web_password: "REPLACE_ME"
+    web_fallback_password: "REPLACE_ME"
+    web_pin: "001234"
+  system:
+    macos_login_password: ""
+    macos_keychain_password: ""
   services:
     npmjs: "REPLACE_ME"
   llm:
@@ -30,6 +38,8 @@ assets:
   ssh:
     default_key: "/absolute/path/id_ed25519"
 ```
+
+`system.macos_login_password` 是 Mac 用户登录密码；`system.macos_keychain_password` 是登录钥匙串密码。请在本机分别填写；即使相同也填写两项，不自动猜测或回退到网站密码。留空时不会执行目标程序。保存密码不等于授予系统权限，也不会解除工具访问限制；插件不自动点击系统授权窗口。
 
 插件入口：`plugins/ai-know-me/skills/assets/SKILL.md`。脚本位于该技能的 `scripts/ai-know-me.mjs`；以下 `<script>` 代表安装后的实际绝对路径，不能照抄占位符或固定版本缓存路径。
 
@@ -42,8 +52,8 @@ node "<script>" run --env API_KEY=llm.openrouter -- node your-script.mjs
 
 `list`、`search` 只返回名称；`get` 始终遮盖值；`run` 直接注入环境变量，关闭子进程输入输出，只返回执行状态。可重复 `--env` 注入多项。`--file` 临时指定另一份 YAML；`AKM_CONFIG_HOME` 可替换配置目录。程序不创建或改写密钥文件，配置文件仅登记路径并保存在插件之外，插件升级或卸载不会删除它。
 
-缺失、为空或占位值会阻止执行并提醒更新原文件。执行失败会报告状态；单凭退出码不能判断凭据过期，需区分认证失败、权限不足和网络问题。网站默认值不代表所有网站都使用它，不自动轮试密码。SSH 注入的是路径，目标程序需将它传给 `ssh -i`；加密私钥可能需要现有 SSH agent。没有浏览器自动填写。
+缺失、为空或占位值会阻止执行并提醒更新原文件。执行失败会报告状态；单凭退出码不能判断凭据过期，需区分认证失败、权限不足和网络问题。`web` 只用于网站，密码变体必须根据该任务选定，不自动轮试。SSH 注入的是路径，目标程序需将它传给 `ssh -i`；加密私钥可能需要现有 SSH agent。没有浏览器自动填写。
 
 原 YAML 是本地明文。该脚本不输出凭据，但目标程序仍可保存或发送凭据，也不能阻止其他工具读取文件。仅向可信程序传递已授权的凭据；不要让 AI 读取原 YAML 或凭据日志。
 
-开发者可运行 `npm ci --ignore-scripts`、`npm test`。旧 npm 包已从注册表删除；官方插件目录已发布脚本版 0.4.0。根目录 package.json 是 private 开发配置，不再提供或发布独立 npm CLI；开发依赖不需要在使用端安装。构建将 YAML 解析器和程序打包成一个脚本，并附带第三方许可。测试包含脱离源码和 node_modules 的插件运行验证。
+开发者可运行 `npm ci --ignore-scripts`、`npm test`。当前插件源码版本为 0.5.0，使用 `web` 网站凭据命名及独立的 `system` 分类。根目录 package.json 是 private 开发配置，不再提供或发布独立 npm CLI；开发依赖不需要在使用端安装。构建将 YAML 解析器和程序打包成一个脚本，并附带第三方许可。测试包含脱离源码和 node_modules 的插件运行验证。

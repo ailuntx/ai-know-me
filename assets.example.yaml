@@ -1,9 +1,16 @@
 version: 1
 assets:
-  defaults:
-    default_username: "example-user"
-    default_email: "user@example.com"
-    default_password: "REPLACE_ME"
+  web:
+    web_username: "example-user"
+    web_email: "user@example.com"
+    web_password_with_special_char: "REPLACE_ME"
+    web_password: "REPLACE_ME"
+    web_fallback_password: "REPLACE_ME"
+    web_pin: "001234"
+  system:
+    # macOS 登录密码与登录钥匙串密码分别填写；即使相同也各自填写。
+    macos_login_password: ""
+    macos_keychain_password: ""
   services:
     gitlab: "REPLACE_ME"
     bfl.ai: "REPLACE_ME"
