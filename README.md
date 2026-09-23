@@ -1,12 +1,12 @@
-# AI Know Me
+# Keybook
 
 中文 · [English](README.en.md)
 
-安全调用本地账号与密钥，继续完成发布、部署和模型接入。**执行脚本随插件提供，无需安装 npm 包、MCP 或后台服务。** 需要本机终端和 Node.js 22+。
+从你维护的本地 YAML 中按需选取凭据，供已授权的任务使用。**执行脚本随插件提供，无需安装 npm 包、MCP 或后台服务。** 需要本机终端和 Node.js 22+。
 
 [官方插件](https://chatgpt.com/plugins/plugins_6aa069eeb4408191a73c5eb02f19bbab) · [发布包](https://github.com/ailuntx/ai-know-me/releases) · [Privacy](docs/privacy.md) · [Terms](docs/terms.md) · [Support](https://github.com/ailuntx/ai-know-me/issues)
 
-安装后告诉 AI：“我的凭据 YAML 在 `/absolute/path/我的密钥.yaml`，请配置 AI Know Me。”只提供路径，不发送文件内容。插件会运行随包脚本的 `init --file`，验证格式并把路径保存到 `~/.config/ai-know-me/config.json`。以后自动复用；旧版 CLI 的配置直接兼容。换文件时提供新路径即可。
+安装后可以直接说“配置 Keybook”。插件会询问已有凭据 YAML 的绝对路径；也可以在请求中直接提供路径。只提供路径，不发送文件内容。插件会运行随包脚本的 `init --file`，验证格式并把路径保存到 `~/.config/ai-know-me/config.json`。以后自动复用；旧版配置路径和 CLI 的配置直接兼容。换文件时提供新路径即可。
 
 | 分类 | 内容 |
 | --- | --- |
@@ -41,7 +41,7 @@ assets:
 
 `system.macos_login_password` 是 Mac 用户登录密码；`system.macos_keychain_password` 是登录钥匙串密码。请在本机分别填写；即使相同也填写两项，不自动猜测或回退到网站密码。留空时不会执行目标程序。保存密码不等于授予系统权限，也不会解除工具访问限制；插件不自动点击系统授权窗口。
 
-插件入口：`plugins/ai-know-me/skills/assets/SKILL.md`。脚本位于该技能的 `scripts/ai-know-me.mjs`；以下 `<script>` 代表安装后的实际绝对路径，不能照抄占位符或固定版本缓存路径。
+凭据技能入口：`plugins/ai-know-me/skills/assets/SKILL.md`；路径配置技能：`plugins/ai-know-me/skills/configure-yaml/SKILL.md`。有可用的自由文本提问界面时，配置技能会用它询问地址。脚本位于凭据技能的 `scripts/ai-know-me.mjs`；以下 `<script>` 代表安装后的实际绝对路径，不能照抄占位符或固定版本缓存路径。
 
 ```sh
 node "<script>" init --file "/absolute/path/我的密钥.yaml"
@@ -56,4 +56,4 @@ node "<script>" run --env API_KEY=llm.openrouter -- node your-script.mjs
 
 原 YAML 是本地明文。该脚本不输出凭据，但目标程序仍可保存或发送凭据，也不能阻止其他工具读取文件。仅向可信程序传递已授权的凭据；不要让 AI 读取原 YAML 或凭据日志。
 
-开发者可运行 `npm ci --ignore-scripts`、`npm test`。当前插件源码版本为 0.5.0，使用 `web` 网站凭据命名及独立的 `system` 分类。根目录 package.json 是 private 开发配置，不再提供或发布独立 npm CLI；开发依赖不需要在使用端安装。构建将 YAML 解析器和程序打包成一个脚本，并附带第三方许可。测试包含脱离源码和 node_modules 的插件运行验证。
+开发者可运行 `npm ci --ignore-scripts`、`npm test`。当前插件源码版本为 0.5.1，使用 `web` 网站凭据命名及独立的 `system` 分类。公开插件沿用原有技术标识 `ai-know-me`，以延续现有安装；配置目录和脚本文件名也保持兼容。根目录 package.json 是 private 开发配置，不提供独立 npm CLI；开发依赖不需要在使用端安装。构建将 YAML 解析器和程序打包成一个脚本，并附带第三方许可。测试包含脱离源码和 node_modules 的插件运行验证。

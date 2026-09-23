@@ -7496,8 +7496,8 @@ async function run(data, mappings, command) {
 }
 
 // src/cli.js
-var version = "0.5.0";
-var help = `ai-know-me ${version} \u2014 \u672C\u5730\u5BC6\u94A5\u67E5\u8BE2
+var version = "0.5.1";
+var help = `Keybook ${version} \u2014 \u672C\u5730\u51ED\u636E\u67E5\u8BE2
 
 init --file PATH       \u6307\u5B9A\u5DF2\u6709 YAML \u6587\u4EF6
 list [GROUP]           \u5217\u51FA\u540D\u79F0\uFF0C\u4E0D\u663E\u793A\u503C

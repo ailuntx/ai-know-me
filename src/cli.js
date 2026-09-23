@@ -3,8 +3,8 @@ import { parseArgs } from 'node:util';
 import * as store from './store.js';
 import { run } from './run.js';
 
-const version = '0.5.0';
-const help = `ai-know-me ${version} — 本地密钥查询
+const version = '0.5.1';
+const help = `Keybook ${version} — 本地凭据查询
 
 init --file PATH       指定已有 YAML 文件
 list [GROUP]           列出名称，不显示值

@@ -1,9 +1,9 @@
 ---
-name: ai-know-me
-description: Use local YAML credentials for tasks needing website credentials (web), local macOS login or login-keychain passwords (system), service tokens (services), model API keys (llm), or SSH private-key paths (ssh). Discover names and inject credentials directly into trusted processes without returning secret values to the conversation. Use before asking the user to paste a secret.
+name: keybook
+description: Use Keybook to find credentials by name in a user-maintained local YAML file and pass selected values to trusted processes for authorized tasks without printing them. Covers website, macOS system, service, model, and SSH entries. Use before asking the user to paste a secret.
 ---
 
-# ai-know-me
+# Keybook
 
 Respond in the user's language. Requires local shell access; explain if unavailable. Continue the authorized task after using credentials. If invoked without a concrete task, explain the categories without reading values.
 
@@ -14,7 +14,7 @@ Respond in the user's language. Requires local shell access; explain if unavaila
 - `ssh`: private-key file paths, for example `ssh.default_key`; values are paths, never inline private keys.
 
 1. Use the bundled [scripts/ai-know-me.mjs](scripts/ai-know-me.mjs) with Node.js 22+. Resolve its absolute path relative to this SKILL.md; do not hardcode a cache/version directory. Below, `node "<script>"` means that bundled file. Do not install or invoke a global npm package. If Node or local shell access is unavailable, explain the missing runtime.
-2. Run `node "<script>" doctor --json`. If uninitialized, ask only for the YAML file path, then run `node "<script>" init --file "<user-provided-path>"`. This validates locally and stores only the path in `~/.config/ai-know-me/config.json` (or `AKM_CONFIG_HOME/config.json`). Existing configurations from the former npm CLI work unchanged. The user can change the path with `init --file` or override it for one command with `--file`. Never ask for the file contents. Do not guess paths or import old notes.
+2. Run `node "<script>" doctor --json`. If uninitialized, follow the sibling [configure-yaml skill](../configure-yaml/SKILL.md) to ask for the existing YAML file's absolute path, validate it, and save only the path in `~/.config/ai-know-me/config.json` (or `AKM_CONFIG_HOME/config.json`). Existing configurations from the former npm CLI work unchanged. The user can change the path with `init --file` or override it for one command with `--file`. Never ask for the file contents. Do not guess paths or import old notes.
 3. Use `node "<script>" search <name> --json` or `list <category> --json`. These return names only. Quote names containing spaces and qualify ambiguous names.
 4. Use `node "<script>" run --env API_KEY=llm.modelscope -- node your-script.mjs`. Choose the actual variable consumed by the trusted target program; this example assumes the script reads `API_KEY`. Repeat `--env` for multiple entries. Some CLIs require an additional configuration file to consume tokens; do not assume every CLI reads an arbitrary variable.
 5. `run` disables child input/output and returns status only. `get` always masks values; the CLI has no plaintext output mode. Users who need to view a value can open their YAML themselves outside the AI conversation. Do not use shell echo, file reads, or browser tool arguments to return secrets into the conversation. If a task requires visible results, make the consumer persist only reviewed, nonsecret results separately; never persist or read raw credential-bearing logs. Do not claim the tool prevents a target process from storing or sending secrets.

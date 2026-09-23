@@ -1,5 +1,5 @@
-# AI Know Me visual identity
+# Keybook visual identity
 
-An original blue, violet and pink gradient emblem on white, selected by the maintainer. Generated with OpenRouter openai/gpt-image-2 at low quality, then resized locally.
+The mark joins a closed book and a key in one simple shape. Its navy field, warm pages and peach spine stay distinct at small sizes. The editable source is `design/keybook-icon.svg`; the PNGs were rendered from that vector with resvg.
 
-Directory logo: plugins/ai-know-me/assets/logo.png (512 × 512). Composer icon: plugins/ai-know-me/assets/icon.png (128 × 128). Brand color: #6554F5.
+Directory logo: `plugins/ai-know-me/assets/logo.png` (512 × 512). Composer icon: `plugins/ai-know-me/assets/icon.png` (128 × 128). Brand color: `#1B4960`.

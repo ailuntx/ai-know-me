@@ -1,7 +1,7 @@
 {
   "name": "ai-know-me",
   "interface": {
-    "displayName": "Ai Know Me"
+    "displayName": "Keybook"
   },
   "plugins": [
     {

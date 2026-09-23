@@ -1,6 +1,6 @@
 # Terms of use / 使用条款
 
-Effective date / 生效日期: 2026-09-10
+Effective date / 生效日期: 2026-09-24
 
 Maintainer / 维护者: ailuntz
 
@@ -8,7 +8,7 @@ Website / 网站: https://www.ailuntz.com
 
 Publisher / 发布者: ailuntz
 
-These terms cover use of the AI Know Me plugin and its bundled scripts. You may install and use the distributed plugin and bundled scripts for your own authorized workflows. This permission does not grant general redistribution or sublicensing rights to the source code; other rights remain reserved unless separately granted.
+These terms cover use of the Keybook plugin and its bundled scripts. You may install and use the distributed plugin and bundled scripts for your own authorized workflows. This permission does not grant general redistribution or sublicensing rights to the source code; other rights remain reserved unless separately granted.
 
 Use only credentials, accounts and files you are authorized to access. You control the file contents and the actions you authorize your assistant to perform. Follow the applicable terms of npm, GitHub, OpenAI and any target service. The software does not grant access to a service or replace its authentication requirements.
 
