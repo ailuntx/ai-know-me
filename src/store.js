@@ -4,7 +4,7 @@ import os from 'node:os';
 import YAML from 'yaml';
 
 export const configPath = () => path.join(
-  process.env.AKM_CONFIG_HOME || path.join(os.homedir(), '.config/ai-know-me'),
+  process.env.KEYBOOK_CONFIG_HOME || path.join(os.homedir(), '.config/keybook'),
   'config.json',
 );
 const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);

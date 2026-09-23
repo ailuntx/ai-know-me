@@ -1,6 +1,6 @@
 {
-  "name": "ai-know-me-plugin-dev",
-  "version": "0.5.1",
+  "name": "keybook-plugin-dev",
+  "version": "0.6.0",
   "description": "Development tools for the self-contained Keybook plugin",
   "type": "module",
   "scripts": {
@@ -13,11 +13,11 @@
   "license": "UNLICENSED",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ailuntx/ai-know-me.git"
+    "url": "git+https://github.com/ailuntx/keybook.git"
   },
   "homepage": "https://www.ailuntz.com",
   "bugs": {
-    "url": "https://github.com/ailuntx/ai-know-me/issues"
+    "url": "https://github.com/ailuntx/keybook/issues"
   },
   "author": "ailuntz",
   "private": true,

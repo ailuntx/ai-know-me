@@ -3,7 +3,7 @@ import { parseArgs } from 'node:util';
 import * as store from './store.js';
 import { run } from './run.js';
 
-const version = '0.5.1';
+const version = '0.6.0';
 const help = `Keybook ${version} — 本地凭据查询
 
 init --file PATH       指定已有 YAML 文件

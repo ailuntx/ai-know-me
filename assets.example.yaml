@@ -12,10 +12,16 @@ assets:
     macos_login_password: ""
     macos_keychain_password: ""
   services:
+    npmjs: "REPLACE_ME"
+    huggingface: "REPLACE_ME"
+    dockerhub: "REPLACE_ME"
+    github: "REPLACE_ME"
     gitlab: "REPLACE_ME"
+    cloudflare: "REPLACE_ME"
     bfl.ai: "REPLACE_ME"
     picsi utoken: "REPLACE_ME"
   llm:
+    openrouter: "REPLACE_ME"
     modelscope: "REPLACE_ME"
     "10086": "REPLACE_ME"
 

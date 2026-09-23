@@ -16,7 +16,7 @@ The tool reads plaintext local files. Review the [privacy notice](privacy.md), m
 
 The publisher provides no paid service or service-level commitment under these terms. The software may contain errors, and compatibility, availability and successful authentication are not guaranteed. These statements do not limit rights or obligations that cannot lawfully be excluded. You may stop using the tool at any time by uninstalling it; manage your local files and third-party credentials separately.
 
-Support: https://github.com/ailuntx/ai-know-me/issues. Updates to these terms will be published on this page with a revised effective date.
+Support: https://github.com/ailuntx/keybook/issues. Updates to these terms will be published on this page with a revised effective date.
 
 你可以安装并使用已分发的插件及随包脚本完成自己的授权任务；此许可不授予源码的通用再分发或转许可权。只访问有权使用的账号、凭据和文件，并遵守相关平台与服务条款。你负责维护原文件及授权 AI 执行的操作。
 

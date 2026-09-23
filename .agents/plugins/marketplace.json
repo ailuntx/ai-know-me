@@ -1,14 +1,14 @@
 {
-  "name": "ai-know-me",
+  "name": "keybook",
   "interface": {
     "displayName": "Keybook"
   },
   "plugins": [
     {
-      "name": "ai-know-me",
+      "name": "keybook",
       "source": {
         "source": "local",
-        "path": "./plugins/ai-know-me"
+        "path": "./plugins/keybook"
       },
       "policy": {
         "installation": "AVAILABLE",

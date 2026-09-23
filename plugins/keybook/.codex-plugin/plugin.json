@@ -1,0 +1,37 @@
+{
+  "name": "keybook",
+  "version": "0.6.0",
+  "description": "Find configured website logins, macOS passwords, publishing and cloud service tokens, model API keys, or SSH key paths in a user-maintained local YAML file; inject only the selected value into an authorized trusted process without printing secrets.",
+  "author": {
+    "name": "ailuntz",
+    "url": "https://www.ailuntz.com"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Keybook",
+    "shortDescription": "按名称调用网站、发布、模型与 SSH 凭据",
+    "longDescription": "Keybook 是供本机已授权任务使用的凭据目录。首次使用时，告诉它你现有凭据 YAML 文件的绝对路径；它会在本地检查格式，只保存路径。以后无需反复粘贴密码或 API Key，直接让 AI 继续原任务即可。\n\n需要登录网站时，可查找 web 分类中的用户名、邮箱、指定密码变体和 PIN；需要本机授权时，可分别查找 system 中的 macOS 登录密码或登录钥匙串密码。发布 npm 包、上传 Hugging Face 模型或数据集、推送 Docker 镜像、操作 GitHub/GitLab、部署 Cloudflare 时，可按名称查找 services 中对应的令牌。调用 OpenRouter、ModelScope 等模型 API 时，查找 llm 中的密钥；连接已授权的 SSH 主机时，查找 ssh 中的私钥文件路径。实际可用条目取决于你自己的 YAML，Keybook 不会假定某个服务已配置。\n\nKeybook 先搜索条目名称，再用随包脚本把选定值注入可信目标程序的环境变量，并继续任务。list/search 只返回名称，get 始终遮盖值，run 隐藏子进程输出并只报告状态；不会在对话中展示明文。SSH 条目是文件路径，由目标程序传给 SSH 客户端。你自行维护本地 YAML；插件不会创建、加密或同步它，也不提供浏览器自动填充。需要本机终端与 Node.js 22+。",
+    "developerName": "ailuntz",
+    "category": "Security",
+    "capabilities": [
+      "首次配置时询问现有凭据 YAML 的绝对路径，仅在本地校验并登记路径",
+      "按名称查找网站用户名、邮箱、密码变体和 PIN，供已授权的网站任务使用",
+      "为 npm、Hugging Face、Docker、GitHub/GitLab、Cloudflare 等操作提供已配置的服务令牌",
+      "为 OpenRouter、ModelScope 等模型 API 调用提供已配置的密钥",
+      "区分 macOS 登录与钥匙串密码，并为 SSH 操作提供私钥文件路径",
+      "向可信本地程序注入选定凭据，不在对话中输出明文"
+    ],
+    "defaultPrompt": [
+      "配置 Keybook：请询问我现有凭据 YAML 的绝对路径，在本地检查格式，只保存路径。",
+      "帮我完成已授权的 npm 发布；需要令牌时用 Keybook 查找并交给可信的发布命令。",
+      "用 Keybook 查找这次 Cloudflare 部署或模型 API 调用所需的凭据，不要在对话中显示值。"
+    ],
+    "brandColor": "#1B4960",
+    "logo": "./assets/logo.png",
+    "composerIcon": "./assets/icon.png",
+    "websiteURL": "https://www.ailuntz.com",
+    "privacyPolicyURL": "https://github.com/ailuntx/keybook/blob/main/docs/privacy.md",
+    "termsOfServiceURL": "https://github.com/ailuntx/keybook/blob/main/docs/terms.md"
+  },
+  "homepage": "https://www.ailuntz.com"
+}

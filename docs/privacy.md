@@ -14,7 +14,7 @@ Keybook is a plugin with a bundled local script. No separate npm installation, M
 
 Installing or updating the plugin, downloading from GitHub, and using an AI platform involve those providers and their own data practices. There is no publisher-operated account or credential database to delete. You control the YAML and local configuration; deleting them does not revoke keys or remove copies held by other services.
 
-Support is provided through https://github.com/ailuntx/ai-know-me/issues. GitHub issues are public. Do not include passwords, tokens, identity documents or full credential files. Information you choose to post there is used to investigate your issue and is subject to GitHub's handling and retention.
+Support is provided through https://github.com/ailuntx/keybook/issues. GitHub issues are public. Do not include passwords, tokens, identity documents or full credential files. Information you choose to post there is used to investigate your issue and is subject to GitHub's handling and retention.
 
 Keybook 在本地读取你指定的 YAML，并仅在本地配置中登记文件路径。发布者不提供托管密钥服务，不通过本程序收集分析数据或接收密钥；原文件为明文。列举和搜索会输出名称，`get` 始终遮盖值，包括 JSON 输出。0.3.4 已删除明文输出选项。人类可自行在本机查看原 YAML，保持在 AI 对话之外。经你授权后，目标程序可将凭据发送给对应认证服务。插件分发平台、GitHub、AI 平台和目标服务各自适用其隐私政策。
 

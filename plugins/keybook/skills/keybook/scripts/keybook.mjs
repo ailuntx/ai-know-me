@@ -7372,7 +7372,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
 var configPath = () => path.join(
-  process.env.AKM_CONFIG_HOME || path.join(os.homedir(), ".config/ai-know-me"),
+  process.env.KEYBOOK_CONFIG_HOME || path.join(os.homedir(), ".config/keybook"),
   "config.json"
 );
 var object = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
@@ -7496,7 +7496,7 @@ async function run(data, mappings, command) {
 }
 
 // src/cli.js
-var version = "0.5.1";
+var version = "0.6.0";
 var help = `Keybook ${version} \u2014 \u672C\u5730\u51ED\u636E\u67E5\u8BE2
 
 init --file PATH       \u6307\u5B9A\u5DF2\u6709 YAML \u6587\u4EF6
