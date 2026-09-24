@@ -1,6 +1,6 @@
 {
   "name": "keybook",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Find configured website logins, macOS passwords, publishing and cloud service tokens, model API keys, or SSH key paths in a user-maintained local YAML file; inject only the selected value into an authorized trusted process without printing secrets.",
   "author": {
     "name": "ailuntz",

@@ -1,6 +1,6 @@
 {
   "name": "keybook-plugin-dev",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Development tools for the self-contained Keybook plugin",
   "type": "module",
   "scripts": {
