@@ -26,7 +26,7 @@
       "帮我完成已授权的 npm 发布；需要令牌时用 Keybook 查找并交给可信的发布命令。",
       "用 Keybook 查找这次 Cloudflare 部署或模型 API 调用所需的凭据，不要在对话中显示值。"
     ],
-    "brandColor": "#1B4960",
+    "brandColor": "#5B2552",
     "logo": "./assets/logo.png",
     "composerIcon": "./assets/icon.png",
     "websiteURL": "https://www.ailuntz.com",
