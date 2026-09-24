@@ -1,12 +1,12 @@
 {
   "package": "keybook",
-  "version": "0.6.0",
-  "packageSha256": "766ee5b3300d7301a731ebe85f3268c221db5aa89ac2b0aab10f0faa4065b250",
-  "releaseUrl": "https://github.com/ailuntx/keybook/releases/tag/v0.6.0",
+  "version": "0.6.1",
+  "packageSha256": "b0918b67781bc3616dd7cefc6e94f2c1d07f9c906ade47ddea3371ebde54a2c1",
+  "releaseUrl": "https://github.com/ailuntx/keybook/releases/tag/v0.6.1",
   "pluginId": "plugins_6ab477295a3081918fce6282c1273661",
-  "submissionId": "appsub_6ab4772967248191b83dfe92d2e7bf3a",
-  "submissionUrl": "https://platform.openai.com/plugins/plugins_6ab477295a3081918fce6282c1273661/submissions/appsub_6ab4772967248191b83dfe92d2e7bf3a",
-  "status": "published",
-  "observedAt": "2026-09-24T01:17:41Z",
-  "directoryUrl": "https://chatgpt.com/plugins/plugins_6ab477295a3081918fce6282c1273661"
+  "submissionId": "appsub_6ab47d998f3881919e40b06149c4caa5",
+  "submissionUrl": "https://platform.openai.com/plugins/plugins_6ab477295a3081918fce6282c1273661/submissions/appsub_6ab47d998f3881919e40b06149c4caa5",
+  "status": "scanning",
+  "observedAt": "2026-09-24T01:32:38Z",
+  "directoryUrl": null
 }
