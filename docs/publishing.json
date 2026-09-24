@@ -6,7 +6,7 @@
   "pluginId": "plugins_6ab477295a3081918fce6282c1273661",
   "submissionId": "appsub_6ab4772967248191b83dfe92d2e7bf3a",
   "submissionUrl": "https://platform.openai.com/plugins/plugins_6ab477295a3081918fce6282c1273661/submissions/appsub_6ab4772967248191b83dfe92d2e7bf3a",
-  "status": "scanning",
-  "observedAt": "2026-09-24T01:10:34Z",
-  "directoryUrl": null
+  "status": "published",
+  "observedAt": "2026-09-24T01:17:41Z",
+  "directoryUrl": "https://chatgpt.com/plugins/plugins_6ab477295a3081918fce6282c1273661"
 }
